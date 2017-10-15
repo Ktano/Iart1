@@ -102,3 +102,4 @@ ENV/
 
 #visual Studio code
 .vscode
+.pylintrc
