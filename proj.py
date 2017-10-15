@@ -52,18 +52,51 @@ def print_board(board):
         linetoPrint+="]"
         print(linetoPrint)
 
+# returns the colour of a posistion in the board/
 def get_color(board, pos):
     return board[pos_l(pos)][pos_c(pos)]
 
+#def creates a group from a position
+def create_group (board, pos):
+    group=[pos]
+    q=[pos]
+    c=get_color(board,pos)
+    while q!=[]:
+        cpos=q.pop(0)
+        #checks top cell
+        npos=make_pos(pos_l(cpos)-1,pos_c(cpos))
+        if 0<pos_l(npos)<len(board) and npos not in group and get_color(board,npos)==c:
+            group.append(npos)
+            q.append(npos)
+        #checks bottom cell
+        npos=make_pos(pos_l(cpos)+1,pos_c(cpos))
+        if 0<pos_l(npos)<len(board) and npos not in group and get_color(board,npos)==c:
+            group.append(npos)
+            q.append(npos)
+        #checks left cell
+        npos=make_pos(pos_l(cpos),pos_c(cpos)-1)
+        if 0<pos_c(npos)<len(board[0]) and npos not in group and get_color(board,npos)==c:
+            group.append(npos)
+            q.append(npos)
+        #checks right cell
+        npos=make_pos(pos_l(cpos),pos_c(cpos)+1)
+        if 0<pos_c(npos)<len(board[0]) and npos not in group and get_color(board,npos)==c:
+            group.append(npos)
+            q.append(npos)
+    return list(set(group))
+
 def board_find_groups(board):
     allgroups=[]
-    group=[]
-    l=0
-    c=0
-    while l<len(board) and c<len(board[0]):
-        colour=board[l][c]
-        group.append(make_pos(l,c))
+    for l in range(0, len(board)):
+        for c in range (0, len(board[0])):
+            if no_color(board[l][c]):
+                continue
+            else:
+                group=create_group(board,make_pos(l,c))
+                allgroups.append(group)
+    return allgroups
 
+# removes the provided group from the board and colapses the board
 def board_remove_group(board,group):
     newBoard = copy.deepcopy(board)
     for pos in group:
@@ -72,6 +105,7 @@ def board_remove_group(board,group):
     colapse_columns(newBoard)
     return newBoard
 
+#colapses the lines of the board
 def colapse_lines(board):
     l=len(board)-1
     c=0
@@ -82,6 +116,7 @@ def colapse_lines(board):
             c+=1
         l-=1
 
+#colaps the columns of the board
 def colapse_columns(board):
     c=0
     while c<len(board):
@@ -90,4 +125,5 @@ def colapse_columns(board):
                 board[i][c],board[i][c+1]=board[i][c+1],board[i][c]
         c+=1
 
-print(board_remove_group([[3,3,0,3,3,3],[2,2,0,3,3,3],[2,2,0,3,3,3],[2,2,1,3,3,3],[2,2,1,3,3,3]],[[4,2],[3,2]]))
+print(board_find_groups([[1,2,1,2,1],[2,1,2,1,2],[1,2,1,2,1],[2,1,2,1,2]]))
+print(board_find_groups([[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]))
