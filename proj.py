@@ -1,9 +1,7 @@
 """Pedro Caetano 56564; Francisco Henriques 75278"""
 
 import copy
-
-from search import Problem
-
+from search import Problem,compare_searchers
 
 # TAI color
 # sem cor = 0
@@ -174,4 +172,7 @@ class same_game(Problem):
         return state.result(action)
     def goal_test(self, state):
         return state.isEmpty()
+    def h(self, state):
+        return 1
+
 
