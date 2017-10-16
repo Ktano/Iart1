@@ -150,6 +150,7 @@ class sg_state:
         return sg_state(board)
     def groups(self):
         return board_find_groups(self.board)
+
 class same_game(Problem):
     """Models a Same Game Problem as a satisfaction problem.
        A Solution cannot have pieces left on the board."""
@@ -160,6 +161,7 @@ class same_game(Problem):
         for group in state.groups():
             if len(group)>1:
                 actionlist.append(group)
+        return actionlist
     def result(self,state,action):
         return state.result(action)
     def goal_test(self, state):

@@ -1,4 +1,4 @@
-from proj import board_find_groups, board_remove_group, sg_state#, same_game, board
+from proj import board_find_groups, board_remove_group, sg_state, same_game, board
 
 def xx_recursive_sort(matrix):
     return sorted(map(sorted, matrix))
