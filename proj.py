@@ -119,19 +119,27 @@ def colapse_lines(board):
     l=len(board)-1
     c=0
     while l>0:
+        c=0
         while c<len(board[0]):
             if no_color(board[l][c]):
-                board[l][c],board[l-1][c]=board[l-1][c],board[l][c]
+                line=l-1
+                while line>0 and no_color(board[line][c]):
+                    line -=1
+                board[l][c],board[line][c]=board[line][c],board[l][c]
             c+=1
         l-=1
 
 #colaps the columns of the board
 def colapse_columns(board):
     c=0
-    while c<len(board):
-        if no_color(board[len(board)-1][c]):
-            for i in range(0,len(board)): 
-                board[i][c],board[i][c+1]=board[i][c+1],board[i][c]
+    line=len(board)-1
+    while c<len(board[0])-1:
+        if no_color(board[line][c]):
+            column=c+1
+            while column<len(board[0])-1 and no_color(board[line][column]):
+                column +=1
+            for i in range(0,line+1): 
+                board[i][c],board[i][column]=board[i][column],board[i][c]
         c+=1
 
 class sg_state:
@@ -142,7 +150,7 @@ class sg_state:
     def isEmpty(self):
         for l in self.board:
             for c in l:
-                if no_color(c):
+                if not no_color(c):
                     return False
         return True
     def result(self,action):
