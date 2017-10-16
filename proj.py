@@ -1,7 +1,9 @@
 """Pedro Caetano 56564; Francisco Henriques 75278"""
 
-import search
 import copy
+
+from search import Problem
+
 
 # TAI color
 # sem cor = 0
@@ -101,7 +103,8 @@ def cell_in_group(allgroups, pos):
             if pos ==p:
                 return True
     return False
-    
+
+
 # removes the provided group from the board and colapses the board
 def board_remove_group(board,group):
     newBoard = copy.deepcopy(board)
@@ -131,5 +134,34 @@ def colapse_columns(board):
                 board[i][c],board[i][c+1]=board[i][c+1],board[i][c]
         c+=1
 
-print(board_find_groups([[1,2,1,2,1],[2,1,2,1,2],[1,2,1,2,1],[2,1,2,1,2]]))
-print(board_find_groups([[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],[2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]))
+class sg_state:
+    def __init__(self,b):
+        self.board=b
+    def __lt__(self,b2):
+        return self<b2
+    def isEmpty(self):
+        for l in self.board:
+            for c in l:
+                if no_color(c):
+                    return False
+        return True
+    def result(self,action):
+        board=board_remove_group(self.board,action)
+        return sg_state(board)
+    def groups(self):
+        return board_find_groups(self.board)
+class same_game(Problem):
+    """Models a Same Game Problem as a satisfaction problem.
+       A Solution cannot have pieces left on the board."""
+    def __init__(self,board):
+        super().__init__(sg_state(board))
+    def actions(self,state):
+        actionlist=[]
+        for group in state.groups():
+            if len(group)>1:
+                actionlist.append(group)
+    def result(self,state,action):
+        return state.result(action)
+    def goal_test(self, state):
+        return state.isEmpty()
+
