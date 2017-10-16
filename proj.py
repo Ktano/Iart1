@@ -146,10 +146,7 @@ class sg_state:
     def __lt__(self,b2):
         return self<b2
     def isEmpty(self):
-        for l in self.board:
-            for c in l:
-                if not no_color(c):
-                    return False
+        return no_color(self.board[len(self.board)-1][0])
         return True
     def result(self,action):
         board=board_remove_group(self.board,action)

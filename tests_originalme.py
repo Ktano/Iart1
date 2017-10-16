@@ -1,4 +1,5 @@
-from project import board_find_groups, board_remove_group, sg_state, same_game, board
+from proj import board_find_groups, board_remove_group, sg_state, same_game, print_board
+from search import depth_first_tree_search, astar_search#, greedy_search
 
 def xx_recursive_sort(matrix):
     return sorted(map(sorted, matrix))
@@ -9,7 +10,7 @@ def test_init(f_name, board_raw):
     global test_counter
     print(f_name, test_counter)
     print('board:')
-    print(board(board_raw))
+    print_board(board_raw)
     print()
     
 def test_before_assert(obtained):
@@ -42,7 +43,7 @@ def test_board_remove_group(board_raw, group, expected):
         global test_counter
         print(test_counter, 'failed')
         print('expected:')
-        print(board(expected))
+        print_board(expected)
         raise
     test_close(f_name)
 
