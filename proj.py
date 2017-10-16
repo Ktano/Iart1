@@ -65,37 +65,43 @@ def create_group (board, pos):
         cpos=q.pop(0)
         #checks top cell
         npos=make_pos(pos_l(cpos)-1,pos_c(cpos))
-        if 0<pos_l(npos)<len(board) and npos not in group and get_color(board,npos)==c:
+        if 0<=pos_l(npos)<len(board) and npos not in group and get_color(board,npos)==c:
             group.append(npos)
             q.append(npos)
         #checks bottom cell
         npos=make_pos(pos_l(cpos)+1,pos_c(cpos))
-        if 0<pos_l(npos)<len(board) and npos not in group and get_color(board,npos)==c:
+        if 0<=pos_l(npos)<len(board) and npos not in group and get_color(board,npos)==c:
             group.append(npos)
             q.append(npos)
         #checks left cell
         npos=make_pos(pos_l(cpos),pos_c(cpos)-1)
-        if 0<pos_c(npos)<len(board[0]) and npos not in group and get_color(board,npos)==c:
+        if 0<=pos_c(npos)<len(board[0]) and npos not in group and get_color(board,npos)==c:
             group.append(npos)
             q.append(npos)
         #checks right cell
         npos=make_pos(pos_l(cpos),pos_c(cpos)+1)
-        if 0<pos_c(npos)<len(board[0]) and npos not in group and get_color(board,npos)==c:
+        if 0<=pos_c(npos)<len(board[0]) and npos not in group and get_color(board,npos)==c:
             group.append(npos)
             q.append(npos)
-    return list(set(group))
+    return group
 
 def board_find_groups(board):
     allgroups=[]
     for l in range(0, len(board)):
         for c in range (0, len(board[0])):
-            if no_color(board[l][c]):
+            if no_color(board[l][c]) or cell_in_group(allgroups, make_pos(l,c)):
                 continue
             else:
                 group=create_group(board,make_pos(l,c))
                 allgroups.append(group)
     return allgroups
-
+def cell_in_group(allgroups, pos):
+    for group in allgroups:
+        for p in group:
+            if pos ==p:
+                return True
+    return False
+    
 # removes the provided group from the board and colapses the board
 def board_remove_group(board,group):
     newBoard = copy.deepcopy(board)
