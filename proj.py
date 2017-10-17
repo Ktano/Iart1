@@ -1,7 +1,7 @@
-"""Pedro Caetano 56564; Francisco Henriques 75278"""
+#Pedro Caetano 56564; Francisco Henriques; Grupo 081;
 
 import copy
-from search import Problem,compare_searchers
+from search import Problem,depth_first_tree_search
 
 # TAI color
 # sem cor = 0
@@ -140,19 +140,34 @@ def colapse_columns(board):
                 board[i][c],board[i][column]=board[i][column],board[i][c]
         c+=1
 
+def ncolors(board):
+    colours= set()
+    for i in board:
+        for c in i:
+                colours.add(c)
+    return len(colours)
+
+
 class sg_state:
     def __init__(self,b):
         self.board=b
     def __lt__(self,b2):
-        return self<b2
+        return len(board_find_groups(self.board))<len(board_find_groups(b2.board))
     def isEmpty(self):
         return no_color(self.board[len(self.board)-1][0])
-        return True
     def result(self,action):
         board=board_remove_group(self.board,action)
         return sg_state(board)
     def groups(self):
         return board_find_groups(self.board)
+    def removable_groups(self):
+        actionlist=[]
+        for group in self.groups():
+            if len(group)>1:
+                actionlist.append(group)
+        return actionlist
+    def __str__(self):
+        return str(self.board)
 
 class same_game(Problem):
     """Models a Same Game Problem as a satisfaction problem.
@@ -160,16 +175,12 @@ class same_game(Problem):
     def __init__(self,board):
         super().__init__(sg_state(board))
     def actions(self,state):
-        actionlist=[]
-        for group in state.groups():
-            if len(group)>1:
-                actionlist.append(group)
-        return actionlist
+        return state.removable_groups()
     def result(self,state,action):
         return state.result(action)
     def goal_test(self, state):
         return state.isEmpty()
-    def h(self, state):
-        return 1
-
+    def h(self, node):
+        s=node.state
+        return ncolors(s.board)+(len(s.groups())-len(s.removable_groups()))
 
